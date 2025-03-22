@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            overflow: hidden;
+            position: relative;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 117, 140, 0.3);
+        }
+        .slider-container {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            height: 80vh;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background-color: white;
+            z-index: 2;
+        }
+        .slider {
+            display: flex;
+            flex-direction: column;
+            height: 800%;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide {
+            width: 100%;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .slide img {
+            width: 95%;
+            height: 95%;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            user-drag: none;
+            user-select: none;
+        }
+        /* Hiệu ứng tim rơi */
+        .heart {
+            position: absolute;
+            top: -10px;
+            color: rgba(255, 100, 150, 0.8);
+            font-size: 20px;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide"><img src="images/4175d207-edc0-43dc-a42b-2d0ae5c3edb1.jfif" alt="Image 1" draggable="false"></div>
+            <div class="slide"><img src="images/3032e418-05d9-4f75-bb15-b9a2679ef0f4.jfif" alt="Image 2" draggable="false"></div>
+            <div class="slide"><img src="images/806dd184-83b4-4edf-85cb-e8fe154c7540.jfif" alt="Image 3" draggable="false"></div>
+            <div class="slide"><img src="images/3032e418-05d9-4f75-bb15-b9a2679ef0f4.jfif" alt="Image 4" draggable="false"></div>
+            <div class="slide"><img src="images/8ce838ea-0c33-4777-a95c-eeeecf906a5c.jfif" alt="Image 5" draggable="false"></div>
+            <div class="slide"><img src="images/2bdffa4c-78aa-4798-badd-c3bc1d1f58ac.jfif" alt="Image 6" draggable="false"></div>
+            <div class="slide"><img src="images/1f48b1d6-9adf-4dee-bbed-6cb287c5af01.jfif" alt="Image 7" draggable="false"></div>
+        </div>
+    </div>
+    <script>
+        let startY, startMouseY;
+        let index = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slider = document.querySelector('.slider');
+
+        document.addEventListener('touchstart', (e) => {
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            let endY = e.changedTouches[0].clientY;
+            if (startY > endY + 50) {
+                nextSlide();
+            } else if (startY < endY - 50) {
+                prevSlide();
+            }
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            startMouseY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            let endMouseY = e.clientY;
+            if (startMouseY > endMouseY + 50) {
+                nextSlide();
+            } else if (startMouseY < endMouseY - 50) {
+                prevSlide();
+            }
+        });
+
+        function nextSlide() {
+            index = (index + 1) % slides.length;
+            updateSlide();
+        }
+
+        function prevSlide() {
+            index = (index - 1 + slides.length) % slides.length;
+            updateSlide();
+        }
+
+        function updateSlide() {
+            slider.style.transform = `translateY(-${index * 80}vh)`;
+        }
+
+        // Tạo hiệu ứng tim rơi
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        setInterval(createHeart, 500);
+    </script>
+</body>
+</html>
